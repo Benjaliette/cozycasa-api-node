@@ -1,6 +1,4 @@
-const swaggerJSDoc = require('swagger-jsdoc');
-
-const swaggerDefinition = {
+{
   "openapi": "3.0.3",
   "info": {
     "title": "CozyCasa - OpenAPI 3.0",
@@ -13,12 +11,12 @@ const swaggerDefinition = {
   },
   "servers": [
     {
-      "url": "http://localhost:3000/api/v1"
+      "url": "https://localhost:3000/api/v1"
     }
   ],
   "tags": [
     {
-      "name": "Todos",
+      "name": "Tasks",
       "description": "CRUD for todo list"
     },
     {
@@ -30,7 +28,7 @@ const swaggerDefinition = {
     "/todos": {
       "get": {
         "tags": [
-          "Todos"
+          "Tasks"
         ],
         "summary": "Get all todos",
         "description": "Get all todos for authenticated user",
@@ -69,7 +67,7 @@ const swaggerDefinition = {
       },
       "post": {
         "tags": [
-          "Todos"
+          "Tasks"
         ],
         "summary": "Add a new task in user todo list",
         "description": "Add a new task in user todo list",
@@ -185,7 +183,7 @@ const swaggerDefinition = {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Identifier"
+                "$ref": "#/components/schemas/User"
               }
             }
           }
@@ -196,12 +194,12 @@ const swaggerDefinition = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -255,7 +253,7 @@ const swaggerDefinition = {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Token"
+                "$ref": "#/components/schemas/User"
               }
             }
           }
@@ -266,12 +264,12 @@ const swaggerDefinition = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -313,44 +311,10 @@ const swaggerDefinition = {
           "name": "user"
         }
       },
-      "Identifier": {
-        "type": "object",
-        "properties": {
-          "identifier": {
-            "type": "string",
-            "description": "username or email",
-            "example": "theUser"
-          },
-          "password": {
-            "type": "string",
-            "example": "123456"
-          }
-        },
-        "xml": {
-          "name": "identifier"
-        }
-      },
-      "Token": {
-        "type": "object",
-        "properties": {
-          "accessToken": {
-            "type": "string",
-            "example": "accesstokenhashed1234"
-          },
-          "refreshToken": {
-            "type": "string",
-            "example": "refreshtokenhashed1234"
-          }
-        },
-        "xml": {
-          "name": "token"
-        }
-      },
       "Todo": {
         "required": [
           "title",
-          "completed",
-          "user"
+          "completed"
         ],
         "type": "object",
         "properties": {
@@ -366,9 +330,6 @@ const swaggerDefinition = {
           "completed": {
             "type": "boolean",
             "example": false
-          },
-          "userId": {
-            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -406,12 +367,4 @@ const swaggerDefinition = {
       }
     }
   }
-};
-
-const options = {
-  swaggerDefinition,
-  apis: ['routes/*.js'],
-};
-
-const swaggerSpec = swaggerJSDoc(options);
-module.exports = swaggerSpec;
+}

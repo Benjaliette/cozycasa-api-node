@@ -4,7 +4,7 @@ const { body, validationResult } = require("express-validator");
 const Todo = require('../models/todo');
 
 exports.todo_list = asyncHandler(async (req, res, next) => {
-  const allTodos = await Todo.find({}, "title completed").exec();
+  const allTodos = await Todo.find({userId: req.user.user._id}, "title completed userId").exec();
 
   res.status(200).json({
     message: "Todo List",
@@ -17,8 +17,10 @@ exports.todo_create = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
+    const user = req.user.user;
+
     const { title, completed } = req.body;
-    const newTodo = new Todo({ title, completed });
+    const newTodo = new Todo({ title, completed, userId: user._id });
 
     if (errors.isEmpty()) {
       await newTodo.save();
