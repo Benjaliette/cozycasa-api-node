@@ -4,7 +4,7 @@ const swaggerDefinition = {
   "openapi": "3.0.3",
   "info": {
     "title": "CozyCasa - OpenAPI 3.0",
-    "description": "This is the documentation of the CozyCasa API based on the OpenAPI 3.0 specification.\nSwagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!\n\nGithub repository:\n- [The CozyCasa API repository](https://github.com/swagger-api/swagger-petstore)",
+    "description": "This is the documentation of the CozyCasa API based on the OpenAPI 3.0 specification.\n\nGithub repository:\n- [The CozyCasa API repository](https://github.com/Benjaliette/cozycasa-api-node)",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "benjamin.liet.dev@gmail.com"
