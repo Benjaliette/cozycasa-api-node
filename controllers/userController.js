@@ -41,12 +41,13 @@ exports.user_login = [
 
     const user = await User.findOne({
       $or: [
-        { username: identifier }
+        { username: identifier },
+        { email: identifier }
       ]
     })
 
     if (!user) {
-      res.status(404).json({ message: "User not found" })
+      res.status(404).json({ message: "L'email ou le mot de passe est incorrect" })
     }
 
     const passwordIsValid = await bcrypt.compare(
@@ -66,8 +67,7 @@ exports.user_login = [
 
     const accessToken = await generateAccessToken({user});
     const refreshToken = await generateRefreshToken({user});
-    console.log(refreshTokens);
-    res.json({ accessToken, refreshToken });
+    res.json({ accessToken, refreshToken, user });
   })
 ]
 
@@ -105,16 +105,13 @@ exports.refresh_token = [
 exports.user_logout = [
   body('token', 'Token must be entered').not().isEmpty(),
   asyncHandler(async (req, res) => {
-    console.log(refreshTokens);
     const errors = validationResult(req);
-    console.log(errors.isEmpty());
 
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array() });
     }
 
     refreshTokens = await removeToken(req.body.token);
-    console.log(refreshTokens);
     res.status(202).json({ message: "Logged out" });
   })
 ]

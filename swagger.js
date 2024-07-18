@@ -212,7 +212,7 @@ const swaggerDefinition = {
         }
       }
     },
-    "/user/logout": {
+    "/users/logout": {
       "delete": {
         "tags": [
           "Users"
@@ -242,7 +242,7 @@ const swaggerDefinition = {
         }
       }
     },
-    "/user/refreshToken": {
+    "/users/refreshToken": {
       "post": {
         "tags": [
           "Users"
