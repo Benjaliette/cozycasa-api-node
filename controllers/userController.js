@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require("express-validator");
 
 const User = require('../models/user');
-const { generateAccessToken, generateRefreshToken, removeToken } = require("../middleware/jwtAuth");
+const { generateAccessToken, generateRefreshToken, removeToken, addToRefreshTokenList } = require("../middleware/jwtAuth");
 let { refreshTokens } = require("../middleware/jwtAuth");
 
 exports.user_create = [
@@ -67,51 +67,60 @@ exports.user_login = [
 
     const accessToken = await generateAccessToken({user});
     const refreshToken = await generateRefreshToken({user});
-    res.json({ accessToken, refreshToken, user });
+
+    console.log(refreshTokens);
+
+    res.cookie('jwt', refreshToken, {
+      httpOnly: true,
+      sameSite: 'None',
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000
+    })
+
+    res.json({user, accessToken});
   })
 ]
 
 exports.refresh_token = [
   body('identifier', 'Email or username must be entered').not().isEmpty(),
-  body('token', 'Password must be entered').not().isEmpty(),
   asyncHandler(async (req, res) => {
-    const { identifier, token } = req.body;
+    if (req.cookies?.jwt) {
+      const { identifier } = req.body;
+      const refreshToken = req.cookies.jwt;
 
-    const user = await User.findOne({
-      $or: [
-        { username: identifier }
+      const user = await User.findOne({
+        $or: [
+        { username: identifier },
+        { email: identifier }
       ]
-    })
+      })
 
-    const errors = validationResult(req);
+      const errors = validationResult(req);
 
-    if (errors.isEmpty()) {
-      if (!refreshTokens.includes(token)) {
-        res.status(400).json({message: "Refresh token invalid"});
+      if (errors.isEmpty()) {
+        if (!refreshTokens.includes(refreshToken)) {
+          res.status(400).json({message: "Refresh token invalid"});
+        }
+
+        const accessToken = await generateAccessToken({user});
+
+        res.json ({accessToken})
       }
-
-      refreshTokens = await removeToken(token)
-
-      const accessToken = await generateAccessToken({user});
-      const refreshToken = await generateRefreshToken({user});
-
-      res.json ({accessToken, refreshToken})
+    } else {
+      res.status(406).json({ message: "Unauthorized" })
     }
 
-    res.status(422).json({ errors: errors.array() })
   })
-]
+];
 
-exports.user_logout = [
-  body('token', 'Token must be entered').not().isEmpty(),
-  asyncHandler(async (req, res) => {
-    const errors = validationResult(req);
+exports.user_logout = asyncHandler(async (req, res) => {
+  if (req.cookies?.jwt) {
+    const refreshToken = req.cookies.jwt;
 
-    if (!errors.isEmpty()) {
-      res.status(422).json({ errors: errors.array() });
-    }
-
-    refreshTokens = await removeToken(req.body.token);
+    refreshTokens = await removeToken(refreshToken);
     res.status(202).json({ message: "Logged out" });
-  })
-]
+
+  } else {
+    res.status(406).json({ message: "Unauthorized" })
+  }
+});

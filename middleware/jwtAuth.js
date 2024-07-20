@@ -17,6 +17,11 @@ const removeToken = async (token) => {
   return refreshTokens;
 }
 
+const addToRefreshTokenList = async (token) => {
+  refreshTokens.push(token);
+  return refreshTokens;
+}
+
 const validateToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader.split(" ")[1];
@@ -40,5 +45,6 @@ module.exports = {
   generateRefreshToken,
   removeToken,
   refreshTokens,
+  addToRefreshTokenList,
   validateToken
 }

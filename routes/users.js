@@ -10,7 +10,7 @@ router.post('/signup', user_controller.user_create);
 router.post('/login', user_controller.user_login);
 
 // LOGOUT //
-router.post('/logout', user_controller.user_logout);
+router.delete('/logout', user_controller.user_logout);
 
 // GET NEW TOKEN //
 router.post('/refreshToken', user_controller.refresh_token);

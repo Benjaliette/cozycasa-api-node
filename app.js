@@ -18,7 +18,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
+
+corsConfig = {
+  origin: 'http://localhost:5173',
+  credentials: true
+}
+
+app.use(cors(corsConfig));
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use('/api/v1/users', users);
