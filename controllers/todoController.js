@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
+const { performance } = require('node:perf_hooks');
 
 const Todo = require('../models/todo');
 
@@ -30,3 +31,17 @@ exports.todo_create = [
     res.status(422).json({ errors: errors.array() })
   })
 ]
+
+exports.todo_update = asyncHandler(async (req, res, next) => {
+  const start = performance.now();
+
+  const todo = await Todo.findOneAndUpdate(
+    { _id: req.params.id },
+    req.body,
+    { new: true }
+  )
+
+  const end = performance.now();
+  console.log(`time => ${end - start}`);
+  res.status(200).json(todo);
+})

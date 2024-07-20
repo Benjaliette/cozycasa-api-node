@@ -8,4 +8,6 @@ router.get('/', validateToken, todo_controller.todo_list);
 
 router.post('/', validateToken, todo_controller.todo_create);
 
+router.put('/:id', validateToken, todo_controller.todo_update);
+
 module.exports = router;
