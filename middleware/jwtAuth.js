@@ -12,6 +12,10 @@ const generateRefreshToken = async (user) => {
   return refreshToken
 }
 
+const findUsername = async (token) => {
+  return jwt.decode(token).user.username;
+}
+
 const removeToken = async (token) => {
   refreshTokens = refreshTokens.filter( (c) => c != token);
   return refreshTokens;
@@ -41,6 +45,7 @@ const validateToken = async (req, res, next) => {
 }
 
 module.exports = {
+  findUsername,
   generateAccessToken,
   generateRefreshToken,
   removeToken,

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require("express-validator");
 
 const User = require('../models/user');
-const { generateAccessToken, generateRefreshToken, removeToken, addToRefreshTokenList } = require("../middleware/jwtAuth");
+const { generateAccessToken, generateRefreshToken, removeToken, addToRefreshTokenList, findUsername } = require("../middleware/jwtAuth");
 let { refreshTokens } = require("../middleware/jwtAuth");
 
 exports.user_create = [
@@ -81,37 +81,34 @@ exports.user_login = [
   })
 ]
 
-exports.refresh_token = [
-  body('identifier', 'Email or username must be entered').not().isEmpty(),
-  asyncHandler(async (req, res) => {
-    if (req.cookies?.jwt) {
-      const { identifier } = req.body;
-      const refreshToken = req.cookies.jwt;
+exports.refresh_token = asyncHandler(async (req, res) => {
+  if (req.cookies?.jwt) {
+    const refreshToken = req.cookies.jwt;
 
-      const user = await User.findOne({
-        $or: [
-        { username: identifier },
-        { email: identifier }
-      ]
-      })
+    const identifier = await findUsername(refreshToken);
 
-      const errors = validationResult(req);
+    const user = await User.findOne({
+      $or: [
+      { username: identifier }
+    ]
+    })
 
-      if (errors.isEmpty()) {
-        if (!refreshTokens.includes(refreshToken)) {
-          res.status(400).json({message: "Refresh token invalid"});
-        }
+    const errors = validationResult(req);
 
-        const accessToken = await generateAccessToken({user});
-
-        res.json ({accessToken})
+    if (errors.isEmpty()) {
+      if (!refreshTokens.includes(refreshToken)) {
+        res.status(400).json({message: "Refresh token invalid"});
       }
-    } else {
-      res.status(406).json({ message: "Unauthorized" })
-    }
 
-  })
-];
+      const accessToken = await generateAccessToken({user});
+
+      res.json ({accessToken})
+    }
+  } else {
+    res.status(406).json({ message: "Unauthorized" })
+  }
+
+});
 
 exports.user_logout = asyncHandler(async (req, res) => {
   if (req.cookies?.jwt) {
