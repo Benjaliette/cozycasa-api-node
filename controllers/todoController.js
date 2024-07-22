@@ -5,7 +5,12 @@ const { performance } = require('node:perf_hooks');
 const Todo = require('../models/todo');
 
 exports.todo_list = asyncHandler(async (req, res, next) => {
-  const allTodos = await Todo.find({userId: req.user.user._id}, "title completed userId").exec();
+  const allTodos = await Todo
+    .find({userId: req.user.user._id}, "title completed userId")
+    .sort({
+      createdAt: 'asc'
+    })
+    .exec();
 
   res.status(200).json({
     message: "Todo List",
