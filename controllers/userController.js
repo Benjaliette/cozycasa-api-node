@@ -68,8 +68,6 @@ exports.user_login = [
     const accessToken = await generateAccessToken({user});
     const refreshToken = await generateRefreshToken({user});
 
-    console.log(refreshTokens);
-
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       sameSite: 'None',

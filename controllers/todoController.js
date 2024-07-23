@@ -46,3 +46,11 @@ exports.todo_update = asyncHandler(async (req, res, next) => {
 
   res.status(200).json(todo);
 })
+
+exports.todo_delete = asyncHandler(async (req, res, next) => {
+  await Todo.findOneAndDelete(
+    { _id: req.params.id }
+  )
+
+  res.status(200).json(req.params.id);
+})

@@ -41,7 +41,19 @@ const swaggerDefinition = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Todo"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Todo List"
+                    },
+                    "todos": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Todo"
+                      }
+                    }
+                  }
                 }
               },
               "application/xml": {
@@ -126,6 +138,57 @@ const swaggerDefinition = {
       },
     },
     "/todos/{id}": {
+      "delete": {
+        "tags": [
+          "Todos"
+        ],
+        "summary": "Delete a task from user todo list",
+        "description": "Update a task from user todo list",
+        "operationId": "todo_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the task to update",
+            "required": "true",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "ID of the deleted task",
+                  "example": "id29of65todo34"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "ID of the deleted task",
+                  "example": "id29of65todo34"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
       "put": {
         "tags": [
           "Todos"
@@ -224,8 +287,8 @@ const swaggerDefinition = {
           }
         },
         "responses": {
-          "default": {
-            "description": "successful operation",
+          "200": {
+            "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
@@ -238,6 +301,9 @@ const swaggerDefinition = {
                 }
               }
             }
+          },
+          "default": {
+            "description": "successful operation"
           }
         }
       }
@@ -266,12 +332,32 @@ const swaggerDefinition = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "accessToken1234"
+                    },
+                    "user": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "accessToken1234"
+                    },
+                    "user": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
                 }
               }
             }
@@ -296,12 +382,24 @@ const swaggerDefinition = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Logged out"
+                    }
+                  }
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Logged out"
+                    }
+                  }
                 }
               }
             }
@@ -320,28 +418,30 @@ const swaggerDefinition = {
         "summary": "Get new access token",
         "description": "",
         "operationId": "refresh_token",
-        "requestBody": {
-          "description": "Tokens for login",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Token"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "accessToken1234"
+                    }
+                  }
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/Token"
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "accessToken1234"
+                    }
+                  }
                 }
               }
             }
@@ -362,9 +462,8 @@ const swaggerDefinition = {
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 10
+            "type": "string",
+            "example": "id29of65todo34"
           },
           "username": {
             "type": "string",
@@ -418,16 +517,13 @@ const swaggerDefinition = {
       },
       "Todo": {
         "required": [
-          "title",
-          "completed",
-          "user"
+          "title"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64",
-            "example": 10
+            "type": "string",
+            "example": "id29of65todo34"
           },
           "title": {
             "type": "string",
@@ -436,14 +532,6 @@ const swaggerDefinition = {
           "completed": {
             "type": "boolean",
             "example": false
-          },
-          "userId": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date",
-            "example": "2024-07-12T16:20:48.795Z"
           }
         },
         "xml": {
