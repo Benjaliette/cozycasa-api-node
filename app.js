@@ -10,6 +10,9 @@ const swaggerSpec = require('./swagger');
 
 const users = require('./routes/users');
 const todos = require('./routes/todos');
+const events = require('./routes/events');
+const homes = require('./routes/homes');
+const notes = require('./routes/notes');
 
 require('dotenv').config();
 
@@ -28,7 +31,10 @@ app.use(cors(corsConfig));
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use('/api/v1/users', users);
-app.use('/api/v1/todos', todos);
+app.use('/api/v1/homes', homes);
+app.use('/api/v1/homes/:homeId/notes', notes);
+app.use('/api/v1/homes/:homeId/todos', todos);
+app.use('/api/v1/homes/:homeId/events', events);
 
 mongoose.set("strictQuery", false);
 

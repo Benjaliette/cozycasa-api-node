@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+// const Home = require("./home");
+
 const UserSchema = new Schema({
   username: {
     type: String,
@@ -15,10 +17,12 @@ const UserSchema = new Schema({
     type: String,
     default: false
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  homes: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Home"
+    }
+  ]
+}, { timestamps: true });
 
 module.exports = mongoose.model("User", UserSchema);

@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const User = require('./user');
-
 const TodoSchema = new Schema({
   title: {
     type: String,
@@ -15,13 +13,9 @@ const TodoSchema = new Schema({
   },
   userId: {
     type: mongoose.Types.ObjectId,
-    ref: User,
+    ref: "User",
     required: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("Todo", TodoSchema);
