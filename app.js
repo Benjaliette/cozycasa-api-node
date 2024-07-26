@@ -29,7 +29,7 @@ corsConfig = {
 
 app.use(cors(corsConfig));
 
-app.use('/api/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use('/api/v1/users', users);
 app.use('/api/v1/homes', homes);
 app.use('/api/v1/homes/:homeId/notes', notes);

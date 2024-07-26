@@ -15,6 +15,11 @@ const TodoSchema = new Schema({
     type: mongoose.Types.ObjectId,
     ref: "User",
     required: true
+  },
+  homeId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Home",
+    required: true
   }
 }, { timestamps: true });
 

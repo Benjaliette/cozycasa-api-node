@@ -37,7 +37,6 @@ exports.user_login = [
   body('password', 'Password must be entered').trim().isLength({min: 6}).not().isEmpty(),
   asyncHandler(async (req, res) => {
     const { identifier } = req.body;
-    const hashedPassword = await bcrypt.hash(req.body.password.trim(), 10);
 
     const user = await User.findOne({
       $or: [
@@ -99,6 +98,14 @@ exports.refresh_token = asyncHandler(async (req, res) => {
       }
 
       const accessToken = await generateAccessToken({user});
+      const newRefreshToken = await generateRefreshToken({user});
+
+      res.cookie('jwt', newRefreshToken, {
+        httpOnly: true,
+        sameSite: 'None',
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000
+      })
 
       res.json ({accessToken})
     }

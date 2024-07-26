@@ -6,7 +6,7 @@ const Todo = require('../models/todo');
 
 exports.todo_list = asyncHandler(async (req, res, next) => {
   const allTodos = await Todo
-    .find({ homeId: req.params.homeId }, "title completed userId")
+    .find({ homeId: req.params.homeId }, "title completed userId homeId")
     .sort({
       createdAt: 'asc'
     })
